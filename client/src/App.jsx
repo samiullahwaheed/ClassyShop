@@ -1,122 +1,82 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { useEffect } from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setCredentials, setAuthStatus } from './features/auth/authSlice.js';
+import { useRefreshTokenMutation } from './features/auth/authApi.js';
 
-function App() {
-  const [count, setCount] = useState(0)
+import MainLayout from './components/layout/MainLayout.jsx';
+import ProtectedRoute from './components/ProtectedRoute.jsx';
+
+import Home from './pages/Home.jsx';
+import ProductListing from './pages/ProductListing.jsx';
+import ProductDetail from './pages/ProductDetail.jsx';
+import Cart from './pages/Cart.jsx';
+import Checkout from './pages/Checkout.jsx';
+import CheckoutSuccess from './pages/CheckoutSuccess.jsx';
+import Login from './pages/auth/Login.jsx';
+import Register from './pages/auth/Register.jsx';
+import ForgotPassword from './pages/auth/ForgotPassword.jsx';
+import ResetPassword from './pages/auth/ResetPassword.jsx';
+import AccountLayout from './pages/account/AccountLayout.jsx';
+import Profile from './pages/account/Profile.jsx';
+import Address from './pages/account/Address.jsx';
+import Wishlist from './pages/account/Wishlist.jsx';
+import Orders from './pages/account/Orders.jsx';
+import OrderDetail from './pages/account/OrderDetail.jsx';
+import Blog from './pages/Blog.jsx';
+import BlogDetail from './pages/BlogDetail.jsx';
+import StaticPage from './pages/StaticPage.jsx';
+import NotFound from './pages/NotFound.jsx';
+
+export default function App() {
+  const dispatch = useDispatch();
+  const [refreshToken] = useRefreshTokenMutation();
+
+  useEffect(() => {
+    dispatch(setAuthStatus('loading'));
+    refreshToken()
+      .unwrap()
+      .then((result) => dispatch(setCredentials(result.data)))
+      .catch(() => dispatch(setAuthStatus('unauthenticated')));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <Routes>
+      <Route element={<MainLayout />}>
+        <Route index element={<Home />} />
+        <Route path="products" element={<ProductListing />} />
+        <Route path="products/category/:slug" element={<ProductListing />} />
+        <Route path="products/:slug" element={<ProductDetail />} />
+        <Route path="cart" element={<Cart />} />
+        <Route path="blog" element={<Blog />} />
+        <Route path="blog/:slug" element={<BlogDetail />} />
+        <Route path="about" element={<StaticPage title="About Us" />} />
+        <Route path="contact" element={<StaticPage title="Contact Us" />} />
+        <Route path="help" element={<StaticPage title="Help Center" />} />
+        <Route path="terms" element={<StaticPage title="Terms and Conditions" />} />
 
-      <div className="ticks"></div>
+        <Route path="login" element={<Login />} />
+        <Route path="register" element={<Register />} />
+        <Route path="forgot-password" element={<ForgotPassword />} />
+        <Route path="reset-password/:token" element={<ResetPassword />} />
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+        <Route element={<ProtectedRoute />}>
+          <Route path="checkout" element={<Checkout />} />
+          <Route path="checkout/success" element={<CheckoutSuccess />} />
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+          <Route path="my-account" element={<AccountLayout />}>
+            <Route index element={<Navigate to="profile" replace />} />
+            <Route path="profile" element={<Profile />} />
+            <Route path="address" element={<Address />} />
+            <Route path="wishlist" element={<Wishlist />} />
+            <Route path="orders" element={<Orders />} />
+            <Route path="orders/:orderId" element={<OrderDetail />} />
+          </Route>
+        </Route>
+
+        <Route path="*" element={<NotFound />} />
+      </Route>
+    </Routes>
+  );
 }
-
-export default App

@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { LuUploadCloud, LuX } from 'react-icons/lu';
+import { LuCloudUpload, LuX } from 'react-icons/lu';
 import { useUploadImageMutation } from '../../features/upload/uploadApi.js';
 import Spinner from './Spinner.jsx';
 
@@ -36,7 +36,7 @@ export default function ImageUploader({ value, onChange, folder = 'misc' }) {
       onClick={() => inputRef.current?.click()}
       className="flex h-32 w-32 flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-gray-300 text-gray-400 hover:border-brand-400 hover:text-brand-500"
     >
-      {isLoading ? <Spinner /> : <LuUploadCloud size={24} />}
+      {isLoading ? <Spinner /> : <LuCloudUpload size={24} />}
       <span className="text-xs">{isLoading ? 'Uploading...' : 'Upload image'}</span>
       <input ref={inputRef} type="file" accept="image/*" className="hidden" onChange={handleFile} />
     </button>

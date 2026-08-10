@@ -1,4 +1,4 @@
-import { LuMenu, LuBell, LuUserCircle2 } from 'react-icons/lu';
+import { LuMenu, LuBell, LuCircleUserRound } from 'react-icons/lu';
 import { useSelector } from 'react-redux';
 import { selectCurrentUser } from '../../features/auth/authSlice.js';
 
@@ -23,7 +23,7 @@ export default function Topbar({ onToggleSidebar }) {
           </span>
         </button>
         <div className="flex items-center gap-2 text-sm text-gray-700">
-          <LuUserCircle2 size={26} className="text-gray-400" />
+          <LuCircleUserRound size={26} className="text-gray-400" />
           <span className="hidden font-medium sm:inline">{user?.name}</span>
         </div>
       </div>
