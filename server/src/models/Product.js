@@ -36,13 +36,12 @@ const productSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-productSchema.pre('validate', function computeDiscount(next) {
+productSchema.pre('validate', function computeDiscount() {
   if (this.oldPrice && this.oldPrice > this.price) {
     this.discountPercent = Math.round(((this.oldPrice - this.price) / this.oldPrice) * 100);
   } else {
     this.discountPercent = 0;
   }
-  next();
 });
 
 productSchema.index({ category: 1, subCategory: 1, thirdLevelCategory: 1 });
