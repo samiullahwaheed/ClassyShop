@@ -1,5 +1,5 @@
 # ClassyShop — MERN E-Commerce 1
-1
+2
 
 A full MERN-stack e-commerce clone of the CLASSYSHOP reference sites, split into three apps:
 
